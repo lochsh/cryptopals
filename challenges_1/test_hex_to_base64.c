@@ -12,6 +12,7 @@ START_TEST(test_hex_str_to_bytes)
 }
 END_TEST
 
+
 int main(void) {
     return 0;
 }
