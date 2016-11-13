@@ -6,10 +6,18 @@
 
 
 TEST_CASE( "Hex char is converted to padded byte", "[hex]" ) {
-    REQUIRE( hex_char_to_padded_byte('d') == 13 );
-    REQUIRE( hex_char_to_padded_byte('e') == 14 );
-    REQUIRE( hex_char_to_padded_byte('0') == 0 );
-    REQUIRE( hex_char_to_padded_byte('8') == 8 );
+    int i;
+    char l_letters[] = {'a', 'b', 'c', 'd', 'e', 'f'};
+    char u_letters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+
+    for (i = 0; i < 10; i++) {
+        REQUIRE( hex_char_to_padded_byte((char)i) == i );
+    }
+
+    for (i = 0; i < 6; i++) {
+        REQUIRE( hex_char_to_padded_byte(l_letters[i]) == i + 10 );
+        REQUIRE( hex_char_to_padded_byte(u_letters[i]) == i + 10 );
+    }
 }
 
 
