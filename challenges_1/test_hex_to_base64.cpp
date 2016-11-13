@@ -22,7 +22,7 @@ TEST_CASE( "Hex char is converted to padded byte", "[hex]" ) {
 
 
 TEST_CASE( "Hex char pair is converted to byte", "[hex]" ) {
-    REQUIRE( hex_char_pair_to_byte('d', 'e') == 222);
+    REQUIRE( hex_char_pair_to_byte('d', 'e') == 222 );
 }
 
 
