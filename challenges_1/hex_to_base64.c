@@ -8,7 +8,6 @@
 uint8_t hex_char_to_padded_byte(char hex_char) {
     const uint8_t mask = 15;
     const uint32_t boundary = 64;
-
     return (hex_char & mask) + (hex_char / boundary) * 9;
 }
 
