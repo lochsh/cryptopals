@@ -21,7 +21,7 @@ uint8_t hex_char_pair_to_byte(char hex_ms, char hex_ls) {
 
 
 uint8_t* hex_str_to_bytes(char* hex_str) {
-    size_t i;
+    int i;
     int num_bytes = strlen(hex_str) / 2;
     uint8_t *bytes = (uint8_t *) malloc(num_bytes);
 
