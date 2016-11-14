@@ -6,8 +6,8 @@
 
 
 TEST_CASE( "Hex char is converted to padded byte", "[hex]" ) {
-    char l_letters[] = {'a', 'b', 'c', 'd', 'e', 'f'};
-    char u_letters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
+    const char l_letters[] = {'a', 'b', 'c', 'd', 'e', 'f'};
+    const char u_letters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
 
     for (int i = 0; i < 10; i++) {
         REQUIRE( hex_char_to_padded_byte((char)i) == i );
@@ -26,7 +26,7 @@ TEST_CASE( "Hex char pair is converted to byte", "[hex]" ) {
 
 
 TEST_CASE( "Hex string is converted to bytes", "[hex]" ) {
-    uint8_t expected[] = {0xde, 0xad, 0xbe, 0xef};
+    const uint8_t expected[] = {0xde, 0xad, 0xbe, 0xef};
     REQUIRE( memcmp(hex_str_to_bytes((char*)"deadbeef"), expected,
                     sizeof(expected)) == 0 );
 }
