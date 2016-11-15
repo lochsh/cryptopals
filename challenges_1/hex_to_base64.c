@@ -23,7 +23,7 @@ uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
 }
 
 
-uint8_t* hex_str_to_bytes(const char* hex_str) {
+uint8_t* hex_str_to_bytes(const char* const hex_str) {
     const int num_bytes = strlen(hex_str) / 2;
     uint8_t *bytes = (uint8_t *) malloc(num_bytes);
 
