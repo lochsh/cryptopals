@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +9,7 @@
 
 
 uint32_t offset_mask(const uint8_t num_bits, const uint8_t start_bit) {
-    return ((uint32_t) pow(2, num_bits) - 1) << (32 - start_bit - num_bits);
+    return ((uint32_t) (1 << num_bits) - 1) << (32 - start_bit - num_bits);
 }
 
 
