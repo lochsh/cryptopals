@@ -25,7 +25,7 @@ TEST_CASE( "Hex char pair is converted to byte" ) {
 }
 
 
-TEST_CASE( "Hex string is converted to bytes") {
+TEST_CASE( "Hex string is converted to bytes" ) {
     const uint8_t expected[] = {0xde, 0xad, 0xbe, 0xef};
     REQUIRE( memcmp(hex_str_to_bytes((char*)"deadbeef"), expected,
                     sizeof(expected)) == 0 );
