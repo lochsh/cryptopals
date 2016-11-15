@@ -1,18 +1,23 @@
 #include <errno.h>
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 
-uint8_t hex_char_to_padded_byte(char hex_char) {
-    const uint8_t mask = 15;
-    const uint32_t boundary = 64;
-    return (hex_char & mask) + (hex_char / boundary) * 9;
+uint8_t lsb_mask(const uint8_t num_lsb) {
+    return (uint8_t) pow(2, num_lsb) - 1;
 }
 
 
-uint8_t hex_char_pair_to_byte(char hex_ms, char hex_ls) {
+uint8_t hex_char_to_padded_byte(const char hex_char) {
+    const uint32_t boundary = 64;
+    return (hex_char & lsb_mask(4)) + (hex_char / boundary) * 9;
+}
+
+
+uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
     return (hex_char_to_padded_byte(hex_ms) << 4) + \
             hex_char_to_padded_byte(hex_ls);
 }

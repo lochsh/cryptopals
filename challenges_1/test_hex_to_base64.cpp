@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 
-TEST_CASE( "Hex char is converted to padded byte", "[hex]" ) {
+TEST_CASE( "Hex char is converted to padded byte" ) {
     const char l_letters[] = {'a', 'b', 'c', 'd', 'e', 'f'};
     const char u_letters[] = {'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -20,13 +20,30 @@ TEST_CASE( "Hex char is converted to padded byte", "[hex]" ) {
 }
 
 
-TEST_CASE( "Hex char pair is converted to byte", "[hex]" ) {
+TEST_CASE( "Hex char pair is converted to byte" ) {
     REQUIRE( hex_char_pair_to_byte('d', 'e') == 222 );
 }
 
 
-TEST_CASE( "Hex string is converted to bytes", "[hex]" ) {
+TEST_CASE( "Hex string is converted to bytes" ) {
     const uint8_t expected[] = {0xde, 0xad, 0xbe, 0xef};
     REQUIRE( memcmp(hex_str_to_bytes((char*)"deadbeef"), expected,
                     sizeof(expected)) == 0 );
+}
+
+
+TEST_CASE( "LSB mask" ) {
+    REQUIRE( lsb_mask(9) == 255 );
+
+    REQUIRE( lsb_mask(8) == 255 );
+    REQUIRE( lsb_mask(7) == 127 );
+    REQUIRE( lsb_mask(6) == 63 );
+    REQUIRE( lsb_mask(5) == 31 );
+
+    REQUIRE( lsb_mask(4) == 15 );
+    REQUIRE( lsb_mask(3) == 7 );
+    REQUIRE( lsb_mask(2) == 3 );
+    REQUIRE( lsb_mask(1) == 1 );
+
+    REQUIRE( lsb_mask(0) == 0 );
 }
