@@ -86,8 +86,8 @@ uint8_t* hex_to_base64(const char* const hex_str) {
         base_64[i] = chunks[i] + ASCII_TO_B64_CAPS * (chunks[i] <= 25)
                                + ASCII_TO_B64_LOWER * (26 <= chunks[i] && chunks[i] <= 51)
                                + ASCII_TO_B64_NUMS * (52 <= chunks[i] && chunks[i] <= 61)
-                               - ASCII_TO_B64_62 * (chunks[i] == 62)
-                               - ASCII_TO_B64_63 * (chunks[i] == 63);
+                               + ASCII_TO_B64_62 * (chunks[i] == 62)
+                               + ASCII_TO_B64_63 * (chunks[i] == 63);
     }
 
     return base_64;
