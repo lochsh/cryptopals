@@ -14,23 +14,23 @@
 #define ASCII_TO_B64_63 -16
 
 
-uint32_t offset_mask(const uint8_t num_bits, const uint8_t start_bit) {
+static uint32_t offset_mask(const uint8_t num_bits, const uint8_t start_bit) {
     return ((uint32_t) (1 << num_bits) - 1) << (32 - start_bit - num_bits);
 }
 
 
-uint8_t hex_char_to_padded_byte(const char hex_char) {
+static uint8_t hex_char_to_padded_byte(const char hex_char) {
     return (hex_char & MASK_4_LSB) + (hex_char / ASCII_NUM_LETTER_BOUND) * 9;
 }
 
 
-uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
+static uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
     return (hex_char_to_padded_byte(hex_ms) << 4) +
             hex_char_to_padded_byte(hex_ls);
 }
 
 
-uint8_t* hex_str_to_bytes(const char* const hex_str) {
+static uint8_t* hex_str_to_bytes(const char* const hex_str) {
     const uint32_t num_bytes = strlen(hex_str) / 2;
     uint8_t *bytes = (uint8_t *) malloc(num_bytes);
 
@@ -47,7 +47,7 @@ uint8_t* hex_str_to_bytes(const char* const hex_str) {
 }
 
 
-uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
+static uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
     const uint32_t num_chunks = 8 * num_bytes / 6;
     uint8_t* chunks = (uint8_t*) malloc(num_chunks);
 
