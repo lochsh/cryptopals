@@ -25,7 +25,7 @@ uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
 
 
 uint8_t* hex_str_to_bytes(const char* const hex_str) {
-    const int num_bytes = strlen(hex_str) / 2;
+    const uint32_t num_bytes = strlen(hex_str) / 2;
     uint8_t *bytes = (uint8_t *) malloc(num_bytes);
 
     if (bytes == NULL) {
@@ -33,7 +33,7 @@ uint8_t* hex_str_to_bytes(const char* const hex_str) {
         return NULL;
     }
 
-    for (int i = 0; i < num_bytes; i++) {
+    for (uint32_t i = 0; i < num_bytes; i++) {
         bytes[i] = hex_char_pair_to_byte(hex_str[i*2], hex_str[i*2 + 1]);
     }
 
@@ -42,7 +42,7 @@ uint8_t* hex_str_to_bytes(const char* const hex_str) {
 
 
 uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
-    const int num_chunks = 8 * num_bytes / 6;
+    const uint32_t num_chunks = 8 * num_bytes / 6;
     uint8_t* chunks = (uint8_t*) malloc(num_chunks);
 
     if (chunks == NULL) {
@@ -50,13 +50,14 @@ uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
         return NULL;
     }
 
-    for (int i = 0; i < num_chunks - 1; i += 3) {
-        uint32_t x = ((uint32_t) bytes[i] << 24) +
-                     ((uint32_t) bytes[i+1] << 16) +
-                     ((uint32_t) bytes[i+2] << 8);
+    for (uint32_t i = 0; i < num_chunks - 1; i += 3) {
 
-        for (int j = 0; j < i + 4; j++) {
-            chunks[j] = (x & offset_mask(6, j*6)) >> (32 - (j + 1)*6);
+        uint32_t x = ((uint32_t) bytes[i] << 16) +
+                     ((uint32_t) bytes[i+1] << 8) +
+                     ((uint32_t) bytes[i+2]);
+
+        for (uint32_t j = 0; j < i + 4; j++) {
+            chunks[j] = (x & offset_mask(6, j*6 + 8)) >> (32 - (j + 1)*6 - 8);
         }
     }
 
@@ -64,21 +65,25 @@ uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
 }
 
 
-uint8_t* base64_to_ascii(const uint8_t* const base_64, const uint8_t n) {
-    uint8_t* ascii = (uint8_t*) malloc(n);
+uint8_t* hex_to_base64(const char* const hex_str) {
+    const uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
+                                                 strlen(hex_str) / 2);
+    const uint32_t num_chars = 8 * strlen(hex_str) / (6 * 2);
 
-    if (ascii == NULL) {
+    uint8_t* base_64 = (uint8_t*) malloc(num_chars);
+
+    if (base_64 == NULL) {
         perror("Error allocating memory");
         return NULL;
     }
 
-    for (int i = 0; i < n; i++) {
-        ascii[i] = base_64[i] + 65 * (base_64[i] <= 25)
-                             + 71 * (26 <= base_64[i] && base_64[i] <= 51) 
-                             - 4 * (52 <= base_64[i] && base_64[i] <= 61)
-                             - 19 * (base_64[i] == 62)
-                             - 16 * (base_64[i] == 63);
+    for (uint32_t i = 0; i < num_chars; i++) {
+        base_64[i] = chunks[i] + 65 * (chunks[i] <= 25)
+                             + 71 * (26 <= chunks[i] && chunks[i] <= 51) 
+                             - 4 * (52 <= chunks[i] && chunks[i] <= 61)
+                             - 19 * (chunks[i] == 62)
+                             - 16 * (chunks[i] == 63);
     }
 
-    return ascii;
+    return base_64;
 }
