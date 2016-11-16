@@ -7,6 +7,12 @@
 #define MASK_4_LSB 0x0F
 #define ASCII_NUM_LETTER_BOUND 64
 
+#define ASCII_TO_B64_CAPS 65
+#define ASCII_TO_B64_LOWER 71
+#define ASCII_TO_B64_NUMS -4
+#define ASCII_TO_B64_62 -19
+#define ASCII_TO_B64_63 -16
+
 
 uint32_t offset_mask(const uint8_t num_bits, const uint8_t start_bit) {
     return ((uint32_t) (1 << num_bits) - 1) << (32 - start_bit - num_bits);
@@ -69,7 +75,6 @@ uint8_t* hex_to_base64(const char* const hex_str) {
     const uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
                                                  strlen(hex_str) / 2);
     const uint32_t num_chars = 8 * strlen(hex_str) / (6 * 2);
-
     uint8_t* base_64 = (uint8_t*) malloc(num_chars);
 
     if (base_64 == NULL) {
@@ -78,11 +83,11 @@ uint8_t* hex_to_base64(const char* const hex_str) {
     }
 
     for (uint32_t i = 0; i < num_chars; i++) {
-        base_64[i] = chunks[i] + 65 * (chunks[i] <= 25)
-                             + 71 * (26 <= chunks[i] && chunks[i] <= 51) 
-                             - 4 * (52 <= chunks[i] && chunks[i] <= 61)
-                             - 19 * (chunks[i] == 62)
-                             - 16 * (chunks[i] == 63);
+        base_64[i] = chunks[i] + ASCII_TO_B64_CAPS * (chunks[i] <= 25)
+                               + ASCII_TO_B64_LOWER * (26 <= chunks[i] && chunks[i] <= 51)
+                               + ASCII_TO_B64_NUMS * (52 <= chunks[i] && chunks[i] <= 61)
+                               - ASCII_TO_B64_62 * (chunks[i] == 62)
+                               - ASCII_TO_B64_63 * (chunks[i] == 63);
     }
 
     return base_64;
