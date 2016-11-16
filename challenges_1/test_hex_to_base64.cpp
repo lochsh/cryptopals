@@ -65,3 +65,11 @@ TEST_CASE( "Dividing bytes into 6 bit chunks" ) {
         REQUIRE( result[i] == chunks[i] );
     }
 }
+
+
+TEST_CASE( "base64 to ascii" ) {
+    uint8_t base_64[] = {0};
+    uint8_t ascii[] = {65};
+    REQUIRE( base64_to_ascii(base_64, 1)[0] == ascii[0]);
+}
+
