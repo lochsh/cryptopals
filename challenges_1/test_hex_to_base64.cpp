@@ -68,8 +68,17 @@ TEST_CASE( "Dividing bytes into 6 bit chunks" ) {
 
 
 TEST_CASE( "base64 to ascii" ) {
-    uint8_t base_64[] = {0};
-    uint8_t ascii[] = {65};
-    REQUIRE( base64_to_ascii(base_64, 1)[0] == ascii[0]);
+    const int n = 63;
+    uint8_t base_64[n];
+
+    for (int i = 0; i < n; i++) {
+        base_64[i] = i;
+    }
+
+    uint8_t ascii[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    for (int i = 0; i < n; i++) {
+        REQUIRE( base64_to_ascii(base_64, n)[i] == ascii[i]);
+    }
 }
 
