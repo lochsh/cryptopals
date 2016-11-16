@@ -79,28 +79,6 @@ uint8_t* base64_to_ascii(const uint8_t* const base_64, const uint8_t n) {
                              - 19 * (base_64[i] == 62)
                              - 16 * (base_64[i] == 63);
     }
-    
+
     return ascii;
-}
-
-
-
-void print_base64(const uint8_t* const bytes, const uint8_t num_bytes) {
-    const uint8_t* const chunks = six_bit_chunks(bytes, num_bytes);
-    const int num_chunks = 8 * num_bytes / 6;
-
-    for (int i = 0; i < num_chunks; i++) {
-        printf("%c", chunks[i] + 65 * (chunks[i] <= 25)
-                               + 71 * (26 <= chunks[i] && chunks[i] <= 51)
-                               - 4 * (52 <= chunks[i] && chunks[i] <= 61)
-                               - 19 * (chunks[i] == 62)
-                               - 16 * (chunks[i] == 63));
-    }
-}
-
-
-void print_hex_as_base64(const char* const hex_str) {
-    const int num_bytes = strlen(hex_str) / 2;
-    uint8_t* bytes = hex_str_to_bytes(hex_str);
-    print_base64(bytes, num_bytes);
 }
