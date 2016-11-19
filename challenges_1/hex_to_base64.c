@@ -42,7 +42,7 @@ static uint8_t* hex_str_to_bytes(const char* const hex_str) {
 }
 
 
-static uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_bytes) {
+static uint8_t* six_bit_chunks(uint8_t* const bytes, const uint8_t num_bytes) {
     const size_t num_chunks = (8 * num_bytes) / 6;
     uint8_t* chunks = (uint8_t*) malloc(num_chunks);
 
@@ -63,20 +63,20 @@ static uint8_t* six_bit_chunks(const uint8_t* const bytes, const uint8_t num_byt
         chunks[j+3] = (x & 0x00003F);
     }
     
+    free(bytes);
     return chunks;
 }
 
 
-char* hex_to_base64(const char* const hex_str) {
+size_t num_b64_chars(const char* const hex_str) {
+    return (8 * strlen(hex_str)) / (6 * 2);
+}
+
+
+char* hex_to_base64(const char* const hex_str, char* base_64) {
     const uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
                                                  strlen(hex_str) / 2);
-    const size_t num_chars = 8 * strlen(hex_str) / (6 * 2);
-    char* base_64 = (char*) malloc(num_chars);
-
-    if (base_64 == NULL) {
-        perror("Error allocating memory");
-        return NULL;
-    }
+    const size_t num_chars = num_b64_chars(hex_str);
 
     for (size_t i = 0; i < num_chars; i++) {
         base_64[i] = chunks[i]
@@ -87,5 +87,7 @@ char* hex_to_base64(const char* const hex_str) {
                  + ASCII_TO_B64_63    * (chunks[i] == 63);
     }
 
+
+    base_64[num_chars] = '\0';
     return base_64;
 }

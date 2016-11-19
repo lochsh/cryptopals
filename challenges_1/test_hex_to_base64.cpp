@@ -35,9 +35,14 @@ TEST_CASE( "Hex string is converted to bytes" ) {
 
 TEST_CASE( "Dividing all zero bytes into 6 bit chunks" ) {
     const uint32_t num_bytes = 3;
-    const uint32_t num_chunks = 8 * num_bytes / 6;
+    const uint32_t num_chunks = (8 * num_bytes) / 6;
 
-    uint8_t bytes[num_bytes] = {0};
+    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
+    if (bytes == NULL) {
+        perror("Error allocating memory");
+    }
+
+    bytes[0] = 0;
     const uint8_t chunks[num_chunks] = {0};
 
     uint8_t* result = six_bit_chunks(bytes, num_bytes);
@@ -51,7 +56,10 @@ TEST_CASE( "Dividing all set bytes into 6 bit chunks" ) {
     const uint32_t num_bytes = 3;
     const uint32_t num_chunks = 8 * num_bytes / 6;
 
-    uint8_t bytes[num_bytes];
+    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
+    if (bytes == NULL) {
+        perror("Error allocating memory");
+    }
 
     for (uint32_t i = 0; i < num_bytes; i++) {
         bytes[i] = 255;
@@ -74,7 +82,12 @@ TEST_CASE( "Dividing bytes into 6 bit chunks" ) {
     const uint32_t num_bytes = 6;
     const uint32_t num_chunks = 8 * num_bytes / 6;
 
-    const uint8_t bytes[] = {0, 1, 2, 0, 1, 2};
+    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
+    if (bytes == NULL) {
+        perror("Error allocating memory");
+    }
+
+    memcpy(bytes, (uint8_t []){ 0, 1, 2, 0, 1, 2 }, num_bytes);
     const uint8_t chunks[] = {0, 0, 4, 2, 0, 0, 4, 2};
 
     uint8_t* result = six_bit_chunks(bytes, num_bytes);
@@ -88,7 +101,12 @@ TEST_CASE( "Dividing bytes ABCDEF into 6 bit chunks" ) {
     const uint32_t num_bytes = 3;
     const uint32_t num_chunks = 8 * num_bytes / 6;
 
-    const uint8_t bytes[] = {0xAB, 0xCD, 0xEF};
+    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
+    if (bytes == NULL) {
+        perror("Error allocating memory");
+    }
+
+    memcpy(bytes, (uint8_t []){0xAB, 0xCD, 0xEF}, num_bytes);
     const uint8_t chunks[] = {42, 60, 55, 47};
 
     uint8_t* result = six_bit_chunks(bytes, num_bytes);
@@ -98,12 +116,27 @@ TEST_CASE( "Dividing bytes ABCDEF into 6 bit chunks" ) {
 }
 
 
+TEST_CASE( "Getting number of b64 chars from hex string" ) {
+    REQUIRE( num_b64_chars("1234") == 2);
+    REQUIRE( num_b64_chars("12345678") == 5);
+    REQUIRE( num_b64_chars("1234567890") == 6);
+    REQUIRE( num_b64_chars("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d") == 64);
+}
+
+
 TEST_CASE( "hex to base 64" ) {
     char base_64[] = "q83v";
     char hex_str[] = "ABCDEF";
 
+    char* result = (char*) malloc(num_b64_chars(hex_str));
+    if (result == NULL) {
+        perror("Error allocating memory");
+    }
+
+    hex_to_base64(hex_str, result);
+
     for (size_t i = 0; i < sizeof(base_64); i++) {
-        REQUIRE( hex_to_base64(hex_str)[i] == base_64[i]);
+        REQUIRE( result[i] == base_64[i]);
     }
 }
 
@@ -111,7 +144,12 @@ TEST_CASE( "hex to base 64" ) {
 TEST_CASE( "acceptance test" ) {
     const char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
     const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
-    const char* result = hex_to_base64(hex);
+    char* result = (char*) malloc(num_b64_chars(hex));
+    if (result == NULL) {
+        perror("Error allocating memory");
+    }
+
+    hex_to_base64(hex, result);
 
     for (uint32_t i = 0; i < strlen(b64); i++) {
         REQUIRE( b64[i] ==  result[i] );
