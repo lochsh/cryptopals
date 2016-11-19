@@ -49,6 +49,8 @@ TEST_CASE( "Dividing all zero bytes into 6 bit chunks" ) {
     for (uint32_t i = 0; i < num_chunks; i++) {
         REQUIRE( result[i] == chunks[i] );
     }
+
+    free(result);
 }
 
 
@@ -75,6 +77,8 @@ TEST_CASE( "Dividing all set bytes into 6 bit chunks" ) {
     for (uint32_t i = 0; i < num_chunks; i++) {
         REQUIRE( result[i] == chunks[i] );
     }
+
+    free(result);
 }
 
 
@@ -94,6 +98,8 @@ TEST_CASE( "Dividing bytes into 6 bit chunks" ) {
     for (uint32_t i = 0; i < num_chunks; i++) {
         REQUIRE( result[i] == chunks[i] );
     }
+
+    free(result);
 }
 
 
@@ -113,6 +119,8 @@ TEST_CASE( "Dividing bytes ABCDEF into 6 bit chunks" ) {
     for (uint32_t i = 0; i < num_chunks; i++) {
         REQUIRE( result[i] == chunks[i] );
     }
+
+    free(result);
 }
 
 

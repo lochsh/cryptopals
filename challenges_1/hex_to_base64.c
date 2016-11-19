@@ -74,7 +74,7 @@ size_t num_b64_chars(const char* const hex_str) {
 
 
 char* hex_to_base64(const char* const hex_str, char* base_64) {
-    const uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
+    uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
                                                  strlen(hex_str) / 2);
     const size_t num_chars = num_b64_chars(hex_str);
 
@@ -87,7 +87,7 @@ char* hex_to_base64(const char* const hex_str, char* base_64) {
                  + ASCII_TO_B64_63    * (chunks[i] == 63);
     }
 
-
+    free(chunks);
     base_64[num_chars] = '\0';
     return base_64;
 }
