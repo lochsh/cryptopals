@@ -138,6 +138,8 @@ TEST_CASE( "hex to base 64" ) {
     for (size_t i = 0; i < sizeof(base_64); i++) {
         REQUIRE( result[i] == base_64[i]);
     }
+    
+    free(result);
 }
 
 
@@ -154,4 +156,6 @@ TEST_CASE( "acceptance test" ) {
     for (uint32_t i = 0; i < strlen(b64); i++) {
         REQUIRE( b64[i] ==  result[i] );
     }
+
+    free(result);
 }
