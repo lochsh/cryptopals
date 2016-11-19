@@ -25,13 +25,13 @@ static uint8_t hex_char_pair_to_byte(const char hex_ms, const char hex_ls) {
 }
 
 
-static uint8_t* hex_str_to_bytes(const char* const hex_str) {
-    if (strlen(hex_str) % 2 != 0) {
+static uint8_t* hex_str_to_bytes(const char* const hex) {
+    if (strlen(hex) % 2 != 0) {
         printf("Invalid hex string, must be even length\n");
         return NULL;
     }
 
-    const size_t num_bytes = strlen(hex_str) / 2;
+    const size_t num_bytes = strlen(hex) / 2;
     uint8_t *bytes = (uint8_t *) malloc(num_bytes);
 
     if (bytes == NULL) {
@@ -40,13 +40,20 @@ static uint8_t* hex_str_to_bytes(const char* const hex_str) {
     }
 
     for (size_t i = 0; i < num_bytes; i++) {
-        bytes[i] = hex_char_pair_to_byte(hex_str[i*2], hex_str[i*2 + 1]);
+        bytes[i] = hex_char_pair_to_byte(hex[i*2], hex[i*2 + 1]);
     }
 
     return bytes;
 }
 
 
+/* Deal with any leftover bytes after dividing bytes into six bit chunks.
+ *
+ * If the number of bytes in a byte array is not divisible by 3, then we need
+ * to specially handle dividing it into 6 bit chunks.  Zero-padding is added
+ * until there is a multiple of 3 bytes, which will in turn ensure full 6 bit
+ * chunks can be created.
+ */
 static void process_leftover_bytes(const uint8_t* const bytes, uint8_t* chunks,
                                    const size_t num_bytes,
                                    const size_t num_chunks) {
@@ -74,6 +81,11 @@ size_t num_b64_chars(const size_t num_bytes) {
 }
 
 
+/* Divide bytes into 6-bit chunks, in preparation for base 64 encoding.
+ *
+ * In base 64 encoding, each character represents 6 bits.  We therefore must
+ * extract 6-bit long chunks from the bytes we are encoding.
+ */
 static uint8_t* six_bit_chunks(uint8_t* const bytes, const uint8_t num_bytes) {
     const size_t num_chunks = num_b64_chars(num_bytes);
     uint8_t* chunks = (uint8_t*) malloc(num_chunks);
@@ -102,9 +114,9 @@ static uint8_t* six_bit_chunks(uint8_t* const bytes, const uint8_t num_bytes) {
 }
 
 
-char* hex_to_base64(char* const hex_str, char* base_64) {
-    const size_t num_bytes = strlen(hex_str) / 2;
-    uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex_str),
+char* hex_to_base64(char* const hex, char* base_64) {
+    const size_t num_bytes = strlen(hex) / 2;
+    uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex),
                                            num_bytes);
     const size_t num_chars = num_b64_chars(num_bytes);
 
