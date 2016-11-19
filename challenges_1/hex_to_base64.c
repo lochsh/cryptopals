@@ -118,6 +118,10 @@ char* hex_to_base64(char* const hex_str, char* base_64) {
     }
 
     free(chunks);
+    
+    for (uint8_t i = 1; i <= num_bytes % 3; i++) {
+        base_64[num_chars - i] = '=';
+    }
     base_64[num_chars] = '\0';
     return base_64;
 }

@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     else {
         char* const hex_str = argv[1];
 
-        char* base_64 = (char*) malloc(num_b64_chars(strlen(hex_str)/2));
+        char* base_64 = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
         if (base_64 == NULL) {
             perror("Error allocating memory");
             return -1;
