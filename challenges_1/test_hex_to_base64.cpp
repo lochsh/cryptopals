@@ -124,11 +124,31 @@ TEST_CASE( "Dividing bytes ABCDEF into 6 bit chunks" ) {
 }
 
 
+TEST_CASE( "Dividing non-multiple of three bytes into 6 chunks" ) {
+    const uint32_t num_bytes = 4;
+    const uint32_t num_chunks = 8 * num_bytes / 6;
+
+    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
+    if (bytes == NULL) {
+        perror("Error allocating memory");
+    }
+
+    memcpy(bytes, (uint8_t []){0xAB, 0xCD, 0xEF, 0x12}, num_bytes);
+    const uint8_t chunks[] = {42, 60, 55, 47, 4, 32, 0, 0};
+    
+    uint8_t* result = six_bit_chunks(bytes, num_bytes);
+    for (uint32_t i = 0; i < num_chunks; i++) {
+        REQUIRE( result[i] == chunks[i] );
+    }
+
+    free(result);
+}
+
+
 TEST_CASE( "Getting number of b64 chars from hex string" ) {
-    REQUIRE( num_b64_chars("1234") == 2);
-    REQUIRE( num_b64_chars("12345678") == 5);
-    REQUIRE( num_b64_chars("1234567890") == 6);
-    REQUIRE( num_b64_chars("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d") == 64);
+    REQUIRE( num_b64_chars(4) == 8 );
+    REQUIRE( num_b64_chars(10) == 16 );
+    REQUIRE( num_b64_chars(48) == 64 );
 }
 
 
@@ -136,7 +156,7 @@ TEST_CASE( "hex to base 64" ) {
     char base_64[] = "q83v";
     char hex_str[] = "ABCDEF";
 
-    char* result = (char*) malloc(num_b64_chars(hex_str));
+    char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2));
     if (result == NULL) {
         perror("Error allocating memory");
     }
@@ -152,9 +172,9 @@ TEST_CASE( "hex to base 64" ) {
 
 
 TEST_CASE( "acceptance test" ) {
-    const char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
+    char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
     const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
-    char* result = (char*) malloc(num_b64_chars(hex));
+    char* result = (char*) malloc(num_b64_chars(strlen(hex)/2));
     if (result == NULL) {
         perror("Error allocating memory");
     }
