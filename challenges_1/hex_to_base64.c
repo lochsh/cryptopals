@@ -114,7 +114,7 @@ static uint8_t* six_bit_chunks(uint8_t* const bytes, const uint8_t num_bytes) {
 }
 
 
-char* hex_to_base64(char* const hex, char* base_64) {
+char* hex_to_base64(const char* const hex, char* const base_64) {
     const size_t num_bytes = strlen(hex) / 2;
     uint8_t* const chunks = six_bit_chunks(hex_str_to_bytes(hex),
                                            num_bytes);
