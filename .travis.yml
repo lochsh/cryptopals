@@ -1,6 +1,8 @@
 sudo: required
 
-before_install: sudo wget https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp /usr/local/include/
+before_install:
+  - wget https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp
+  - sudo mv catch.hpp /usr/local/include
 
 language: cpp
 
