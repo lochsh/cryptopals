@@ -6,4 +6,4 @@ compiler:
   - clang
   
 script:
-  - make tests && ./tests
+  - cd challenges_1 && make tests && ./tests
