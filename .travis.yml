@@ -6,4 +6,4 @@ compiler:
   - clang
   
 script:
-  - make tests
+  - make tests && ./tests
