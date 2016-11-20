@@ -41,7 +41,7 @@ static uint8_t* hex_str_to_bytes(const char* const hex) {
 }
 
 
-static void base_64_encode(const uint8_t* const bytes, const size_t num_bytes,
+static void base_64_encode(uint8_t* const bytes, const size_t num_bytes,
                            char* const b64) {
 
     const char* const b64_ref = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -72,6 +72,8 @@ static void base_64_encode(const uint8_t* const bytes, const size_t num_bytes,
         b64[i*4 + 2] = b64_ref[ (bytes[i*3 + 1] & 0x0F) << 2];
         b64[i*4 + 3] = '=';
     }
+
+    free(bytes);
 }
 
 
