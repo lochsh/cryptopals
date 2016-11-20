@@ -51,14 +51,13 @@ static void base_64_encode(const uint8_t* const bytes, const size_t num_bytes,
     size_t i;
     for (i = 0; i < num_bytes/3; i++) {
 
-       uint32_t x = ((uint32_t) bytes[i*3    ] << 16) +
-                    ((uint32_t) bytes[i*3 + 1] <<  8) +
-                    ((uint32_t) bytes[i*3 + 2]);
+       b64[i*4    ] = b64_ref[ (bytes[i*3    ] & 0xFC) >> 2];
+       b64[i*4 + 1] = b64_ref[((bytes[i*3    ] & 0x03) << 4) +
+                              ((bytes[i*3 + 1] & 0xF0) >> 4)];
 
-       b64[i*4    ] = b64_ref[(x & 0xFC0000) >> 18];
-       b64[i*4 + 1] = b64_ref[(x & 0x03F000) >> 12];
-       b64[i*4 + 2] = b64_ref[(x & 0x000FC0) >>  6];
-       b64[i*4 + 3] = b64_ref[(x & 0x00003F)];
+       b64[i*4 + 2] = b64_ref[((bytes[i*3 + 1] & 0x0F) << 2) +
+                              ((bytes[i*3 + 2] & 0xC0) >> 6)];
+       b64[i*4 + 3] = b64_ref[  bytes[i*3 + 2] & 0x3F];
     }
 
     if (num_bytes % 3 == 1) {
