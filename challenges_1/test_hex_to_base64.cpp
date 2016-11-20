@@ -59,9 +59,28 @@ TEST_CASE( "hex to base 64" ) {
 }
 
 
-TEST_CASE( "hex to base 64 with = signs" ) {
+TEST_CASE( "hex to base 64 with 1 leftover byte" ) {
     char base_64[] = "q83vEg==";
     char hex_str[] = "ABCDEF12";
+
+    char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
+    if (result == NULL) {
+        perror("Error allocating memory");
+    }
+
+    hex_to_base64(hex_str, result);
+
+    for (size_t i = 0; i < sizeof(base_64); i++) {
+        REQUIRE( result[i] == base_64[i]);
+    }
+    
+    free(result);
+}
+
+
+TEST_CASE( "hex to base 64 with 2 leftover bytes" ) {
+    char base_64[] = "q83vEjQ=";
+    char hex_str[] = "ABCDEF1234";
 
     char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
     if (result == NULL) {
