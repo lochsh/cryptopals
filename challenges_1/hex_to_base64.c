@@ -76,15 +76,13 @@ static void base_64_encode(const uint8_t* const bytes, const size_t num_bytes,
 
 
 size_t num_b64_chars(const size_t num_bytes) {
-    return ((8 * num_bytes) / 6) + (3 * (num_bytes % 3 != 0));
+    return 4 * (((num_bytes - 1) / 3) + 1);
 }
 
 
 char* hex_to_base64(const char* const hex, char* const base_64) {
     const size_t num_bytes = strlen(hex) / 2;
-    const size_t num_chars = num_b64_chars(num_bytes);
-
     base_64_encode(hex_str_to_bytes(hex), num_bytes, base_64);
-    base_64[num_chars] = '\0';
+    base_64[num_b64_chars(num_bytes)] = '\0';
     return base_64;
 }

@@ -34,7 +34,14 @@ TEST_CASE( "Hex string is converted to bytes" ) {
 
 
 TEST_CASE( "Getting number of b64 chars from hex string" ) {
+    REQUIRE( num_b64_chars(1) == 4 );
+    REQUIRE( num_b64_chars(2) == 4 );
+    REQUIRE( num_b64_chars(3) == 4 );
+
     REQUIRE( num_b64_chars(4) == 8 );
+    REQUIRE( num_b64_chars(5) == 8 );
+    REQUIRE( num_b64_chars(6) == 8 );
+
     REQUIRE( num_b64_chars(10) == 16 );
     REQUIRE( num_b64_chars(48) == 64 );
 }
@@ -60,8 +67,8 @@ TEST_CASE( "hex to base 64" ) {
 
 
 TEST_CASE( "hex to base 64 with 1 leftover byte" ) {
-    char base_64[] = "q83vEg==";
-    char hex_str[] = "ABCDEF12";
+    const char base_64[] = "q83vEg==";
+    const char hex_str[] = "ABCDEF12";
 
     char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
     if (result == NULL) {
@@ -79,8 +86,8 @@ TEST_CASE( "hex to base 64 with 1 leftover byte" ) {
 
 
 TEST_CASE( "hex to base 64 with 2 leftover bytes" ) {
-    char base_64[] = "q83vEjQ=";
-    char hex_str[] = "ABCDEF1234";
+    const char base_64[] = "q83vEjQ=";
+    const char hex_str[] = "ABCDEF1234";
 
     char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
     if (result == NULL) {
@@ -98,8 +105,8 @@ TEST_CASE( "hex to base 64 with 2 leftover bytes" ) {
 
 
 TEST_CASE( "acceptance test" ) {
-    char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120"
-                 "706f69736f6e6f7573206d757368726f6f6d";
+    const char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65"
+                       "206120706f69736f6e6f7573206d757368726f6f6d";
     const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG"
                        "11c2hyb29t";
     char* result = (char*) malloc(num_b64_chars(strlen(hex)/2) + 1);
