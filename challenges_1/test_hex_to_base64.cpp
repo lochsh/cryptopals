@@ -33,118 +33,6 @@ TEST_CASE( "Hex string is converted to bytes" ) {
 }
 
 
-TEST_CASE( "Dividing all zero bytes into 6 bit chunks" ) {
-    const uint32_t num_bytes = 3;
-    const uint32_t num_chunks = (8 * num_bytes) / 6;
-
-    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
-    if (bytes == NULL) {
-        perror("Error allocating memory");
-    }
-
-    bytes[0] = 0;
-    const uint8_t chunks[num_chunks] = {0};
-
-    uint8_t* result = six_bit_chunks(bytes, num_bytes);
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        REQUIRE( result[i] == chunks[i] );
-    }
-
-    free(result);
-}
-
-
-TEST_CASE( "Dividing all set bytes into 6 bit chunks" ) {
-    const uint32_t num_bytes = 3;
-    const uint32_t num_chunks = 8 * num_bytes / 6;
-
-    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
-    if (bytes == NULL) {
-        perror("Error allocating memory");
-    }
-
-    for (uint32_t i = 0; i < num_bytes; i++) {
-        bytes[i] = 255;
-    }
-
-    uint8_t chunks[num_chunks];
-
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        chunks[i] = 63;
-    }
-
-    uint8_t* result = six_bit_chunks(bytes, num_bytes);
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        REQUIRE( result[i] == chunks[i] );
-    }
-
-    free(result);
-}
-
-
-TEST_CASE( "Dividing bytes into 6 bit chunks" ) {
-    const uint32_t num_bytes = 6;
-    const uint32_t num_chunks = 8 * num_bytes / 6;
-
-    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
-    if (bytes == NULL) {
-        perror("Error allocating memory");
-    }
-
-    memcpy(bytes, (uint8_t []){ 0, 1, 2, 0, 1, 2 }, num_bytes);
-    const uint8_t chunks[] = {0, 0, 4, 2, 0, 0, 4, 2};
-
-    uint8_t* result = six_bit_chunks(bytes, num_bytes);
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        REQUIRE( result[i] == chunks[i] );
-    }
-
-    free(result);
-}
-
-
-TEST_CASE( "Dividing bytes ABCDEF into 6 bit chunks" ) {
-    const uint32_t num_bytes = 3;
-    const uint32_t num_chunks = 8 * num_bytes / 6;
-
-    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
-    if (bytes == NULL) {
-        perror("Error allocating memory");
-    }
-
-    memcpy(bytes, (uint8_t []){0xAB, 0xCD, 0xEF}, num_bytes);
-    const uint8_t chunks[] = {42, 60, 55, 47};
-
-    uint8_t* result = six_bit_chunks(bytes, num_bytes);
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        REQUIRE( result[i] == chunks[i] );
-    }
-
-    free(result);
-}
-
-
-TEST_CASE( "Dividing non-multiple of three bytes into 6 chunks" ) {
-    const uint32_t num_bytes = 4;
-    const uint32_t num_chunks = 8 * num_bytes / 6;
-
-    uint8_t *bytes = (uint8_t *) malloc(num_bytes);
-    if (bytes == NULL) {
-        perror("Error allocating memory");
-    }
-
-    memcpy(bytes, (uint8_t []){0xAB, 0xCD, 0xEF, 0x12}, num_bytes);
-    const uint8_t chunks[] = {42, 60, 55, 47, 4, 32, 0, 0};
-    
-    uint8_t* result = six_bit_chunks(bytes, num_bytes);
-    for (uint32_t i = 0; i < num_chunks; i++) {
-        REQUIRE( result[i] == chunks[i] );
-    }
-
-    free(result);
-}
-
-
 TEST_CASE( "Getting number of b64 chars from hex string" ) {
     REQUIRE( num_b64_chars(4) == 8 );
     REQUIRE( num_b64_chars(10) == 16 );
@@ -172,7 +60,7 @@ TEST_CASE( "hex to base 64" ) {
 
 
 TEST_CASE( "hex to base 64 with = signs" ) {
-    char base_64[] = "q83vEgA=";
+    char base_64[] = "q83vEg==";
     char hex_str[] = "ABCDEF12";
 
     char* result = (char*) malloc(num_b64_chars(strlen(hex_str)/2) + 1);
@@ -191,8 +79,10 @@ TEST_CASE( "hex to base 64 with = signs" ) {
 
 
 TEST_CASE( "acceptance test" ) {
-    char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
-    const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
+    char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120"
+                 "706f69736f6e6f7573206d757368726f6f6d";
+    const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG"
+                       "11c2hyb29t";
     char* result = (char*) malloc(num_b64_chars(strlen(hex)/2) + 1);
     if (result == NULL) {
         perror("Error allocating memory");
