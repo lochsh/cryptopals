@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <string.h>
-#include "hex_to_base64.c"
+#include "utils.c"
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
@@ -28,7 +28,7 @@ TEST_CASE( "Hex char pair is converted to byte" ) {
 
 TEST_CASE( "Hex string is converted to bytes" ) {
     const uint8_t expected[] = {0xde, 0xad, 0xbe, 0xef};
-    REQUIRE( memcmp(hex_str_to_bytes((char*)"deadbeef"), expected,
+    REQUIRE( memcmp(hex_decode((char*)"deadbeef"), expected,
                     sizeof(expected)) == 0 );
 }
 
@@ -104,7 +104,7 @@ TEST_CASE( "hex to base 64 with 2 leftover bytes" ) {
 }
 
 
-TEST_CASE( "acceptance test" ) {
+TEST_CASE( "hex to base 64 acceptance test" ) {
     const char hex[] = "49276d206b696c6c696e6720796f757220627261696e206c696b65"
                        "206120706f69736f6e6f7573206d757368726f6f6d";
     const char b64[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG"
@@ -121,4 +121,24 @@ TEST_CASE( "acceptance test" ) {
     }
 
     free(result);
+}
+
+
+TEST_CASE( "fixed xor acceptance test" ) {
+    const char hex_x[] = "1c0111001f010100061a024b53535009181c";
+    const char hex_y[] = "686974207468652062756c6c277320657965";
+
+    char* xor_hex = (char*) malloc(strlen(hex_x)/2 + 1);
+
+    if (xor_hex == NULL) {
+        perror("Error allocating memory");
+        return;
+    }
+
+    hex_fixed_xor(hex_x, hex_y, xor_hex);
+    const char* const expected = "746865206b696420646f6e277420706c6179";
+
+    for (size_t i = 0; i < strlen(hex_x); i++) {
+        REQUIRE( xor_hex[i] == expected[i] );
+    }
 }
