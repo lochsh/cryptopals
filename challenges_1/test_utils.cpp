@@ -112,6 +112,7 @@ TEST_CASE( "hex to base 64 acceptance test" ) {
     char* result = (char*) malloc(num_b64_chars(strlen(hex)/2) + 1);
     if (result == NULL) {
         perror("Error allocating memory");
+        return;
     }
 
     hex_to_base64(hex, result);
@@ -128,7 +129,7 @@ TEST_CASE( "fixed xor acceptance test" ) {
     const char hex_x[] = "1c0111001f010100061a024b53535009181c";
     const char hex_y[] = "686974207468652062756c6c277320657965";
 
-    char* xor_hex = (char*) malloc(strlen(hex_x)/2 + 1);
+    char* xor_hex = (char*) malloc(strlen(hex_x) + 1);
 
     if (xor_hex == NULL) {
         perror("Error allocating memory");
@@ -136,9 +137,11 @@ TEST_CASE( "fixed xor acceptance test" ) {
     }
 
     hex_fixed_xor(hex_x, hex_y, xor_hex);
-    const char* const expected = "746865206b696420646f6e277420706c6179";
+    const char expected[] = "746865206b696420646f6e277420706c6179";
 
     for (size_t i = 0; i < strlen(hex_x); i++) {
         REQUIRE( xor_hex[i] == expected[i] );
     }
+
+    free(xor_hex);
 }

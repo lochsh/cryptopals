@@ -105,13 +105,12 @@ static void hex_encode(const uint8_t* const bytes, const size_t num_bytes,
                        char* const hex) {
     const char* const hex_ref = "0123456789abcdef";
 
-    size_t i;
-    for (i = 0; i < num_bytes; i++) {
-        hex[i*2    ] = hex_ref[bytes[i] >> 4  ];
+    for (size_t i = 0; i < num_bytes; i++) {
+        hex[i*2    ] = hex_ref[bytes[i] >> 4        ];
         hex[i*2 + 1] = hex_ref[bytes[i] & MASK_4_LSB];
     }
 
-    hex[i*2] = '\0';
+    hex[num_bytes * 2] = '\0';
 }
 
 
