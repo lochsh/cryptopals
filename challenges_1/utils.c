@@ -4,12 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MASK_4_LSB 0x0F
-#define ASCII_NUM_LETTER_BOUND 64
-
 
 static uint8_t hex_char_to_padded_byte(const char hex_char) {
-    return (hex_char & MASK_4_LSB) + (hex_char / ASCII_NUM_LETTER_BOUND) * 9;
+    const uint8_t ascii_num_bound = 64;
+    return (hex_char & 0x0F) + (hex_char / ascii_num_bound) * 9;
 }
 
 
@@ -107,7 +105,7 @@ static void hex_encode(const uint8_t* const bytes, const size_t num_bytes,
 
     for (size_t i = 0; i < num_bytes; i++) {
         hex[i*2    ] = hex_ref[bytes[i] >> 4        ];
-        hex[i*2 + 1] = hex_ref[bytes[i] & MASK_4_LSB];
+        hex[i*2 + 1] = hex_ref[bytes[i] & 0x0F];
     }
 
     hex[num_bytes * 2] = '\0';
